@@ -16,11 +16,11 @@ class testEvent {
 	
 	//Scene
 	private void setUpSceneEventEmpty(){
-		this.event=new Event("");
+		this.event=new Event();
 	}
 	
 	private void setUpSceneEventNormal(){
-		this.event=new Event("");
+		this.event=new Event();
 		
 		Spectator s1=new Spectator("3", "Esteban", "Ariza", "acosta57esteban@gmail.com", "Male", "Colombia", "ea.png", new GregorianCalendar());
 		Spectator s2=new Spectator("1", "Mateo", "Valdes", "mxyz@hotmail.com", "Male", "Colombia", "mv.png", new GregorianCalendar());
@@ -40,6 +40,7 @@ class testEvent {
 	}
 	
 	//Test
+	//BST(Spectator)--------------------------------------------------------------------------------------|
 	@Test
 	void testAddSpectator(){
 		setUpSceneEventEmpty();
@@ -59,12 +60,84 @@ class testEvent {
 	
 	@Test
 	void testSearchSpectator(){
+		setUpSceneEventEmpty();
+		assertNull(event.searchSpectator("ola"));
+		
 		setUpSceneEventNormal();
 		
 		assertNotNull(event.searchSpectator("3"));
 		assertNotNull(event.searchSpectator("1"));
 		assertNotNull(event.searchSpectator("5"));
 		assertNull(event.searchSpectator("2"));
+	}
+	
+	@Test
+	void testShowCountrySpectators(){
+		setUpSceneEventNormal();
+		
+		String text=event.showCountrySpectators("Colombia");
+		String[] spectators=text.split("\n");
+		assertEquals(spectators[0].charAt(1), 'E');
+		assertEquals(spectators[1].charAt(5), 'M');
+		assertEquals(spectators[2].charAt(5), 'J');
+	}
+	
+	@Test
+	void testSpectatorSize(){
+		setUpSceneEventEmpty();
+		assertEquals(event.spectatorSize(), 0);
+		
+		setUpSceneEventNormal();
+		assertEquals(event.spectatorSize(), 3);
+	}
+	
+	@Test
+	void testGetRandomSpectator(){
+		setUpSceneEventNormal();
+		Spectator s1=event.getRandomSpectator();
+		Spectator s2=event.getRandomSpectator();
+		assertNotEquals(s1, s2);
+		
+		if(s1.getId().equals("5")){
+			assertNull(event.getRootSpectator().getAlpha());
+		}
+		else if(s1.getId().equals("7")){
+			assertNull(event.getRootSpectator().getOmega());
+		}
+		else{
+			if(event.getRootSpectator().getId().equals("5")){
+				assertNull(event.getRootSpectator().getAlpha());
+			}
+			else{
+				assertNull(event.getRootSpectator().getOmega());
+			}
+		}
+		
+	}
+	
+	@Test
+	void testGetCountrySpectator(){
+		setUpSceneEventNormal();
+		Spectator s=event.getCountrySpectators("Colombia");
+		
+		assertEquals(event.getRootSpectator().getId(), "3");
+		assertEquals(event.getRootSpectator().getAlpha().getId(), "1");
+		assertEquals(event.getRootSpectator().getOmega().getId(), "5");
+	}
+	//----------------------------------------------------------------------------------------------------|
+	
+	//List(Competitor)------------------------------------------------------------------------------------|
+	@Test
+	void addCompetitor(){
+		setUpSceneEventEmpty();
+		event.addCompetitor(new Spectator("3", "Esteban", "Ariza", "acosta57esteban@gmail.com", "Male", "Colombia", "ea.png", new GregorianCalendar()));
+		event.addCompetitor(new Spectator("1", "Mateo", "Valdes", "mxyz@hotmail.com", "Male", "Colombia", "mv.png", new GregorianCalendar()));
+		event.addCompetitor(new Spectator("5", "Johan", "Giraldo", "voodlyc@yahoo.com", "Male", "Colombia", "jg.png", new GregorianCalendar()));
+
+		
+		assertEquals(event.getFirstCompetitor().getId(), "5");
+		assertEquals(event.getFirstCompetitor().getOmega().getId(), "1");
+		assertEquals(event.getFirstCompetitor().getOmega().getOmega().getId(), "3");
 	}
 	
 	@Test
@@ -78,11 +151,23 @@ class testEvent {
 	}
 	
 	@Test
-	void testLoad(){
+	void testShowCountryCompetitors(){
+		setUpSceneEventNormal();
+		
+		String text=event.showCountryCompetitors("Colombia");
+		String[] spectators=text.split("\n");
+		assertEquals(spectators[0].charAt(1), 'E');
+		assertEquals(spectators[1].charAt(1), 'M');
+		assertEquals(spectators[2].charAt(1), 'J');
+	}
+	//----------------------------------------------------------------------------------------------------|
+	
+	@Test
+	void testLoad(){//Que hago?
 		setUpSceneEventEmpty();
 		event.load("data/1.txt");
 		assertEquals(event.getRootSpectator().getId(), "6");
-		assertEquals(event.getRootSpectator().getOmega().getId(), "7");
+		assertEquals(event.getRootSpectator().getOmega().getId(), "8");
 	}
 
 }

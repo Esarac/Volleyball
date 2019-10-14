@@ -1,7 +1,0 @@
-6,Esteban,Ariza,acosta57esteban@gmail.com,Male,Colombia,ea.png,2008/9/9
-7,Mateo,Valdes,mxyz@hotmail.com,Male,Colombia,mv.png,2008/9/7
-5,Johan,Giraldo,j.sebasgr036@gmail.com,Male,Colombia,jg.png,2008/5/4
-9,Juan,Ossa,golder@hotmail.com,Female,Colombia,jo.png,2008/6/3
-3,Samuel,Satizabal,samu.s@gmail.com,Male,Colombia,ss.png,2008/11/7
-4,Isabella,Villamil,yishvica@hotmail.com,Female,Colombia,iv.png,2008/3/25
-8,David,Jhun,kyoto.life@yahoo.com,Male,Japon,dj.png,2008/10/9

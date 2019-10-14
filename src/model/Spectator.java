@@ -1,5 +1,7 @@
 package model;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Spectator implements Comparable<Spectator>{
@@ -34,58 +36,31 @@ public class Spectator implements Comparable<Spectator>{
 		this.birthdate=birthdate;
 		
 	}
-	//Do
-	public int countSpectator(){
-		int sum=0;
-		if(alpha!=null)
-			sum+=alpha.countSpectator();
-		if(omega!=null)
-			sum+=omega.countSpectator();
-		return sum + 1;
-	}
 	
-	public Spectator getRandomSpectator(){
-		int probability=(int)(Math.random()*101);
-		Spectator spectator=null;
-		if(probability>=70)
-			return this;
-		else{
-			int path=(int)(Math.random()*2);
-			if(path==0){
-				if(alpha!=null)
-					spectator=alpha.getRandomSpectator();
-				else
-					spectator=this;
-			}
-			else{
-				if(omega!=null)
-					spectator=omega.getRandomSpectator();
-				else
-					spectator=this;
-			}
-		}
-		return spectator;
-			
-	}
-	
-	//Add
+	//BST(Spectator)--------------------------------------------------------------------------------------|
+		//Add
 	public boolean addSpectator(Spectator spectator){
 		boolean possible=true;
 		
-		if(spectator.compareTo(this)>0){
-			if(this.omega==null){
-				this.omega=spectator;
+		if(spectator!=null){
+			if(spectator.compareTo(this)>0){
+				if(this.omega==null){
+					this.omega=spectator;
+				}
+				else{
+					possible=this.omega.addSpectator(spectator);
+				}
+			}
+			else if(spectator.compareTo(this)<0){
+				if(this.alpha==null){
+					this.alpha=spectator;
+				}
+				else{
+					possible=this.alpha.addSpectator(spectator);
+				}
 			}
 			else{
-				possible=this.omega.addSpectator(spectator);
-			}
-		}
-		else if(spectator.compareTo(this)<0){
-			if(this.alpha==null){
-				this.alpha=spectator;
-			}
-			else{
-				possible=this.alpha.addSpectator(spectator);
+				possible=false;
 			}
 		}
 		else{
@@ -95,18 +70,36 @@ public class Spectator implements Comparable<Spectator>{
 		return possible;
 	}
 	
-	public void addCompetitor(Spectator spectator){
-		if(omega!=null){
-			omega.addCompetitor(spectator);
+		//Delete
+	public Spectator deleteSpectator() {
+		Spectator spectator=null;
+		
+		int path=(int)(Math.random()*2);
+		if(path==0){
+			if(alpha!=null){
+				alpha.addSpectator(omega);
+				spectator=alpha;
+			}
+			else if(omega!=null){
+				omega.addSpectator(alpha);
+				spectator=omega;
+			}
 		}
 		else{
-			omega=spectator;
-			spectator.setAlpha(this);
+			if(omega!=null){
+				omega.addSpectator(alpha);
+				spectator=omega;
+			}
+			else if(alpha!=null){
+				alpha.addSpectator(omega);
+				spectator=alpha;
+			}
 		}
 		
+		return spectator;
 	}
 	
-	//Search
+		//Search
 	public Spectator searchSpectator(String id){
 		Spectator spectator=null;
 		
@@ -125,25 +118,98 @@ public class Spectator implements Comparable<Spectator>{
 		return spectator;
 	}
 	
-	public Spectator searchCompetitor(String id){
-		Spectator competitor=null;
+		//Show
+	public String showSpectators(int level){
+		String spectators="";
+		for(int i=0; i<level; i++){
+			spectators+="	";
+		}
+		if(level>0){
+			spectators+="\\->";
+		}
+		spectators+=this+"\n";
+		if(alpha!=null)
+			spectators+=alpha.showSpectators(level+1);
+		if(omega!=null)
+			spectators+=omega.showSpectators(level+1);
+		return spectators;
 		
-		if(id.equals(this.id)){
-			competitor=this;
+	}
+	
+		//Calculate
+	public int countSpectator(){
+		int sum=0;
+		if(alpha!=null)
+			sum+=alpha.countSpectator();
+		if(omega!=null)
+			sum+=omega.countSpectator();
+		return sum + 1;
+	}
+	
+		//Get
+	public Spectator getRandomSpectator(){
+		int probability=(int)(Math.random()*101);
+		Spectator spectator=null;
+		if(probability<=10){
+			spectator=this;
 		}
 		else{
-			if(this.omega!=null)
-				competitor=omega.searchCompetitor(id);
+			int path=(int)(Math.random()*2);
+			if(path==0){
+				if(alpha!=null){
+					spectator=alpha.getRandomSpectator();
+					if(spectator.compareTo(alpha)==0){
+						alpha=alpha.deleteSpectator();
+					}
+				}	
+				else{
+					spectator=this;
+				}
+			}
+			else{
+				if(omega!=null){
+					spectator=omega.getRandomSpectator();
+					if(spectator.compareTo(omega)==0){
+						omega=omega.deleteSpectator();
+					}
+				}
+				else{
+					spectator=this;
+				}
+			}
 		}
-		
-		return competitor;
+		return spectator;
+			
+	}
+	
+	public ArrayList<Spectator> getCountrySpectators(String country){
+		ArrayList<Spectator> spectators=new ArrayList<Spectator>();
+		if(country.equals(this.country))
+			spectators.add(new Spectator(this.id, this.name, this.lastName, this.email, this.gender, this.country, this.photo, this.birthdate));
+		if(alpha!=null)
+			spectators.addAll(alpha.getCountrySpectators(country));
+		if(omega!=null)
+			spectators.addAll(omega.getCountrySpectators(country));
+		return spectators;
+	}
+	//----------------------------------------------------------------------------------------------------|
+	
+	//Show
+	public String toString() {
+		SimpleDateFormat f = new SimpleDateFormat("dd/MM/yyyy");
+		return "[" + name + " " + lastName +
+				", " + id +
+				", " + gender +
+				", " + f.format(birthdate.getTime()) +
+				", " + country +
+				", " + email + "]";
 	}
 	
 	//Compare
 	public int compareTo(Spectator spectator){
 		return this.id.compareTo(spectator.id);
 	}
-
+	
 	//Set
 	public void setAlpha(Spectator alpha){
 		this.alpha = alpha;
@@ -192,16 +258,6 @@ public class Spectator implements Comparable<Spectator>{
 	
 	public Spectator getOmega(){
 		return omega;
-	}
-	
-	//Show
-	public String toString() {
-		return "[" + name + " " + lastName +
-				", " + id +
-				", " + gender +
-				//", " + birthdate +
-				", " + country +
-				", " + email + "]";
 	}
 	
 }

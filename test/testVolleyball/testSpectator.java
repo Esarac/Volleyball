@@ -26,18 +26,8 @@ class testSpectator {
 		spectator.setOmega(s2);
 	}
 	
-	private void setUpSceneCompetitorNormal(){
-		this.spectator=new Spectator("6","Esteban", "Ariza","acosta57esteban@gmail.com", "Male", "Colombia", "ea.png", new GregorianCalendar(2000, 8, 9));
-		Spectator s1=new Spectator("5", "Mateo", "Valdes", "mxyz@hotmail.com", "Male", "Colombia", "mv.png", new GregorianCalendar());
-		Spectator s2=new Spectator("7", "Johan", "Giraldo", "voodlyc@yahoo.com", "Male", "Colombia", "jg.png", new GregorianCalendar());
-		spectator.setOmega(s1);//s0->s1
-		s1.setAlpha(spectator);//s0<-s1
-		s1.setOmega(s2);//s1->s2
-		s2.setAlpha(s1);//s1<-s2
-		
-	}
-	
 	//Test
+	//BST(Spectator)--------------------------------------------------------------------------------------|
 	@Test
 	void testAddSpectator(){
 		setUpSceneSpectatorEmpty();
@@ -54,6 +44,22 @@ class testSpectator {
 	}
 	
 	@Test
+	void testDeleteSpectator(){
+		setUpSceneSpectatorEmpty();
+		assertNull(spectator.deleteSpectator());
+		
+		setUpSceneSpectatorNormal();
+		Spectator s=spectator.deleteSpectator();
+		if(s.getId().equals("5")){
+			assertEquals(s.getOmega().getId(), "7");
+		}
+		else{
+			assertEquals(s.getAlpha().getId(), "5");
+		}
+		
+	}
+	
+	@Test
 	void testSearchSpectator(){
 		setUpSceneSpectatorNormal();
 		
@@ -62,15 +68,52 @@ class testSpectator {
 		assertNotNull(spectator.searchSpectator("7"));
 		assertNull(spectator.searchSpectator("4"));
 	}
+
+	@Test
+	void testShowSpectator(){
+		setUpSceneSpectatorNormal();
+		
+		String text=spectator.showSpectators(0);
+		String[] spectators=text.split("\n");
+		assertEquals(spectators[0].charAt(1), 'E');
+		assertEquals(spectators[1].charAt(5), 'M');
+		assertEquals(spectators[2].charAt(5), 'J');
+	}
 	
 	@Test
-	void testSearchCompetitor(){
-		setUpSceneCompetitorNormal();
+	void testCountSpectator(){
+		setUpSceneSpectatorEmpty();
+		assertEquals(spectator.countSpectator(), 1);
 		
-		assertNotNull(spectator.searchCompetitor("6"));
-		assertNotNull(spectator.searchCompetitor("5"));
-		assertNotNull(spectator.searchCompetitor("7"));
-		assertNull(spectator.searchCompetitor("4"));
+		setUpSceneSpectatorNormal();
+		assertEquals(spectator.countSpectator(), 3);
 	}
-
+	
+	@Test
+	void testGetRamdomSpectator(){
+		setUpSceneSpectatorNormal();
+		Spectator s1=spectator.getRandomSpectator();
+		Spectator s2=spectator.getRandomSpectator();
+		assertNotEquals(s1, s2);
+		
+		if(s1.getId().equals("5")){
+			assertNull(spectator.getAlpha());
+		}
+		else if(s1.getId().equals("7")){
+			assertNull(spectator.getOmega());
+		}
+	}
+	
+	@Test
+	void testGetCountrySpectators(){
+		setUpSceneSpectatorNormal();
+		
+		assertEquals(spectator.getCountrySpectators("Colombia").get(0).getId(), "6");
+		assertEquals(spectator.getCountrySpectators("Colombia").get(1).getId(), "5");
+		assertEquals(spectator.getCountrySpectators("Colombia").get(2).getId(), "7");
+		
+		assertEquals(spectator.getCountrySpectators("Japon").size(), 0);
+	}
+	//----------------------------------------------------------------------------------------------------|
+	
 }
