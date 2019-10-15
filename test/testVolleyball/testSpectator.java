@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import model.Spectator;
 
-class testSpectator {
+class TestSpectator {
 
 	//Class
 	private Spectator spectator;

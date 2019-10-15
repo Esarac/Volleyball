@@ -9,14 +9,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-public class Event {
+public class Tourney {
 
 	//Attribute
 	private Spectator rootSpectator;
 	private Spectator firstCompetitor;
 	
 	//Constructor
-	public Event(){}
+	public Tourney(){}
 	
 	//BST(Spectator)--------------------------------------------------------------------------------------|
 		//Add
@@ -108,7 +108,7 @@ public class Event {
 	}
 	
 		//Set
-	public void setRootSpectator(Spectator rootSpectator) {
+	public void setRootSpectator(Spectator rootSpectator){
 		this.rootSpectator = rootSpectator;
 	}
 	

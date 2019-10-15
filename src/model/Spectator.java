@@ -30,10 +30,20 @@ public class Spectator implements Comparable<Spectator>{
 		this.name=name;
 		this.lastName=lastName;
 		this.email=email;
-		this.gender=gender;
 		this.country=country;
 		this.photo=photo;
 		this.birthdate=birthdate;
+		
+		if(gender.equals(MALE) || gender.equals(FEMALE))
+			this.gender=gender;
+		else{
+			try {
+				throw new ImpossibleGenderException();
+			} catch (ImpossibleGenderException e) {
+				e.printStackTrace();
+				this.gender=FEMALE;
+			}
+		}
 		
 	}
 	
