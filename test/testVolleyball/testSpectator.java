@@ -50,13 +50,7 @@ class TestSpectator {
 		
 		setUpSceneSpectatorNormal();
 		Spectator s=spectator.deleteSpectator();
-		if(s.getId().equals("5")){
-			assertEquals(s.getOmega().getId(), "7");
-		}
-		else{
-			assertEquals(s.getAlpha().getId(), "5");
-		}
-		
+		assertTrue((s.getId().equals("5") && s.getOmega()!=null) || (s.getId().equals("7") && s.getAlpha()!=null));
 	}
 	
 	@Test
@@ -70,7 +64,7 @@ class TestSpectator {
 	}
 
 	@Test
-	void testShowSpectator(){
+	void testShowSpectators(){
 		setUpSceneSpectatorNormal();
 		
 		String text=spectator.showSpectators(0);
@@ -90,18 +84,12 @@ class TestSpectator {
 	}
 	
 	@Test
-	void testGetRamdomSpectator(){
+	void testGetRandomSpectator(){
 		setUpSceneSpectatorNormal();
 		Spectator s1=spectator.getRandomSpectator();
 		Spectator s2=spectator.getRandomSpectator();
 		assertNotEquals(s1, s2);
 		
-		if(s1.getId().equals("5")){
-			assertNull(spectator.getAlpha());
-		}
-		else if(s1.getId().equals("7")){
-			assertNull(spectator.getOmega());
-		}
 	}
 	
 	@Test

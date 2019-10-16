@@ -39,6 +39,23 @@ class TestTourney {
 		tourney.setFirstCompetitor(s4);
 	}
 	
+	private void setUpSceneTourneyWithoutCompetitors(){
+		this.tourney=new Tourney();
+		
+		Spectator s1=new Spectator("3", "Esteban", "Ariza", "acosta57esteban@gmail.com", "Male", "Colombia", "ea.png", new GregorianCalendar());
+		Spectator s2=new Spectator("1", "Mateo", "Valdes", "mxyz@hotmail.com", "Male", "Colombia", "mv.png", new GregorianCalendar());
+		Spectator s3=new Spectator("2", "Samuel", "Satizabal", "samu.s@hotmail.com", "Male", "Colombia", "ss.png", new GregorianCalendar());
+		Spectator s4=new Spectator("5", "Johan", "Giraldo", "voodlyc@yahoo.com", "Male", "Colombia", "jg.png", new GregorianCalendar());
+		Spectator s5=new Spectator("4", "Juan", "Sabogal", "epico@yahoo.com", "Male", "Colombia", "js.png", new GregorianCalendar());
+		s2.setOmega(s3);//s2->s3
+		s1.setAlpha(s2);//s1->s2
+		
+		s4.setAlpha(s5);//s4->s5
+		s1.setOmega(s4);//s1->s3
+		tourney.setRootSpectator(s1);
+		
+	}
+	
 	//Test
 	//BST(Spectator)--------------------------------------------------------------------------------------|
 	@Test
@@ -83,6 +100,15 @@ class TestTourney {
 	}
 	
 	@Test
+	void testLoadSpectators(){
+		setUpSceneTourneyEmpty();
+		assertFalse(tourney.loadSpectators("LoLXd"));
+		tourney.loadSpectators("dat/test.txt");
+		assertEquals(tourney.getRootSpectator().getId(), "6");
+		assertEquals(tourney.spectatorSize(), 7);
+	}
+	
+	@Test
 	void testSpectatorSize(){
 		setUpSceneTourneyEmpty();
 		assertEquals(tourney.spectatorSize(), 0);
@@ -97,26 +123,12 @@ class TestTourney {
 		Spectator s1=tourney.getRandomSpectator();
 		Spectator s2=tourney.getRandomSpectator();
 		assertNotEquals(s1, s2);
-		
-		if(s1.getId().equals("5")){
-			assertNull(tourney.getRootSpectator().getAlpha());
-		}
-		else if(s1.getId().equals("7")){
-			assertNull(tourney.getRootSpectator().getOmega());
-		}
-		else{
-			if(tourney.getRootSpectator().getId().equals("5")){
-				assertNull(tourney.getRootSpectator().getAlpha());
-			}
-			else{
-				assertNull(tourney.getRootSpectator().getOmega());
-			}
-		}
+		assertEquals(tourney.spectatorSize(), 1);
 		
 	}
 	
 	@Test
-	void testGetCountrySpectator(){
+	void testGetCountrySpectators(){
 		setUpSceneTourneyNormal();
 		Spectator s=tourney.getCountrySpectators("Colombia");
 		
@@ -128,13 +140,12 @@ class TestTourney {
 	
 	//List(Competitor)------------------------------------------------------------------------------------|
 	@Test
-	void addCompetitor(){
+	void testAddCompetitor(){
 		setUpSceneTourneyEmpty();
 		tourney.addCompetitor(new Spectator("3", "Esteban", "Ariza", "acosta57esteban@gmail.com", "Male", "Colombia", "ea.png", new GregorianCalendar()));
 		tourney.addCompetitor(new Spectator("1", "Mateo", "Valdes", "mxyz@hotmail.com", "Male", "Colombia", "mv.png", new GregorianCalendar()));
 		tourney.addCompetitor(new Spectator("5", "Johan", "Giraldo", "voodlyc@yahoo.com", "Male", "Colombia", "jg.png", new GregorianCalendar()));
 
-		
 		assertEquals(tourney.getFirstCompetitor().getId(), "5");
 		assertEquals(tourney.getFirstCompetitor().getOmega().getId(), "1");
 		assertEquals(tourney.getFirstCompetitor().getOmega().getOmega().getId(), "3");
@@ -160,14 +171,15 @@ class TestTourney {
 		assertEquals(spectators[1].charAt(1), 'M');
 		assertEquals(spectators[2].charAt(1), 'J');
 	}
-	//----------------------------------------------------------------------------------------------------|
 	
 	@Test
-	void testLoad(){//Que hago?
-		setUpSceneTourneyEmpty();
-		tourney.load("data/1.txt");
-		assertEquals(tourney.getRootSpectator().getId(), "6");
-		assertEquals(tourney.getRootSpectator().getOmega().getId(), "8");
+	void testLoadCompetitors(){
+		setUpSceneTourneyWithoutCompetitors();
+		tourney.loadCompetitors();
+		assertNotNull(tourney.getFirstCompetitor());
+		assertNotNull(tourney.getFirstCompetitor().getOmega());
+		assertEquals(tourney.spectatorSize(), 3);
 	}
+	//----------------------------------------------------------------------------------------------------|
 
 }
